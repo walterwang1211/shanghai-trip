@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>上海慢活之旅 (11/4-11/8)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans TC",sans-serif;background:#f4f6f9;-webkit-overflow-scrolling:touch;overflow-x:hidden}
+.active-tab{background-color:#1e40af!important;color:#fff!important}
+.hide-scrollbar::-webkit-scrollbar{display:none}
+.hide-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+.accordion-content{max-height:0;overflow:hidden;transition:max-height .35s ease-out}
+.accordion-content.open{max-height:3000px;transition:max-height .5s ease-in}
+.marker-label{background:#1e3a8a;color:#fff;padding:2px 5px;border-radius:4px;font-size:10px;font-weight:bold;border:1px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.3);white-space:nowrap}
+.hotel-label{background:#059669}
+.airport-label{background:#e11d48}
+img{max-width:100%;height:auto;border-radius:12px}
+</style>
+</head>
+<body class="text-gray-800 antialiased pb-28 md:pb-24">
+<div class="bg-blue-900 text-white shadow-md sticky top-0 z-50">
+<div class="max-w-5xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center md:justify-between gap-2">
+<div class="text-center md:text-left">
+<h1 class="text-lg md:text-xl font-bold tracking-wide">上海慢活之旅</h1>
+<p class="text-xs md:text-sm text-blue-200 mt-0.5">11/4(三) - 11/8(日) • 6人家族行</p>
+</div>
+<div class="text-[10px] md:text-xs bg-blue-800 text-blue-100 px-3 py-1.5 rounded-full">匯率：1 RMB = 4.5 TWD</div>
+</div></div>
+
+<div class="max-w-5xl mx-auto px-3 md:px-6 pt-4 md:pt-6">
+<div class="grid grid-cols-3 gap-2 bg-gray-200 p-1 md:p-1.5 rounded-xl mb-6 shadow-inner text-xs md:text-sm font-semibold text-gray-600">
+<button id="tab1" onclick="switchSheet(1)" class="py-2.5 md:py-3 text-center rounded-lg transition-all active-tab">&#x1F4CB; 行程總覽</button>
+<button id="tab2" onclick="switchSheet(2)" class="py-2.5 md:py-3 text-center rounded-lg transition-all">&#x1F5FA;&#xFE0F; 詳細行程</button>
+<button id="tab3" onclick="switchSheet(3)" class="py-2.5 md:py-3 text-center rounded-lg transition-all">&#x1F4B0; 統合預算</button>
+</div>
+
+<div id="sheet1" class="animate-fade space-y-5">
+
+<div class="relative w-full rounded-xl overflow-hidden shadow-md mb-5">
+<img src="images/pudong.jpg" class="w-full h-auto rounded-xl" loading="lazy" alt="上海景觀">
+<div class="absolute top-4 left-4 bg-black/60 text-white px-4 py-2 rounded-lg backdrop-blur-sm">
+<h2 class="text-lg md:text-xl font-bold">上海慢活之旅</h2>
+<p class="text-sm text-blue-200">11/4-11/8 • 六人家族行</p>
+</div>
+</div>
+
+<div class="bg-white rounded-xl p-4 md:p-5 shadow-sm border border-gray-100">
+<h2 class="text-base md:text-lg font-bold text-blue-900 border-l-4 border-blue-600 pl-2 mb-4">&#x2708;&#xFE0F; 航班資訊</h2>
+<div class="space-y-3 text-xs md:text-sm">
+<div class="bg-blue-50/70 p-3 rounded-lg border border-blue-100">
+<div class="flex items-center justify-between mb-2"><span class="font-bold text-blue-800">&#x1F6EB; 去程 (11/4 週三)</span><span class="bg-blue-200 text-blue-800 px-2 py-0.5 rounded text-[10px] md:text-xs">春秋航空 9C8878</span></div>
+<div class="flex items-center justify-between text-gray-700 px-1">
+<div class="text-center"><p class="font-black text-sm md:text-base text-gray-900">18:15</p><p>高雄 (KHH)</p></div>
+<div class="text-gray-400 text-[10px] md:text-xs">━━ 2小時20分 ━━</div>
+<div class="text-center"><p class="font-black text-sm md:text-base text-gray-900">20:35</p><p>上海浦東 (PVG)</p></div>
+</div></div>
+<div class="bg-emerald-50/70 p-3 rounded-lg border border-emerald-100">
+<div class="flex items-center justify-between mb-2"><span class="font-bold text-emerald-800">&#x1F6EC; 回程 (11/8 週日)</span><span class="bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded text-[10px] md:text-xs">春秋航空 9C8877</span></div>
+<div class="flex items-center justify-between text-gray-700 px-1">
+<div class="text-center"><p class="font-black text-sm md:text-base text-gray-900">14:55</p><p>上海浦東 (PVG)</p></div>
+<div class="text-gray-400 text-[10px] md:text-xs">━━ 2小時20分 ━━</div>
+<div class="text-center"><p class="font-black text-sm md:text-base text-gray-900">17:15</p><p>高雄 (KHH)</p></div>
+</div></div>
+<div class="flex justify-between border-t border-gray-50 pt-3 mt-2"><span class="text-gray-500">機票/人</span><span class="font-bold text-gray-900"><span class="line-through text-gray-400 mr-1">NT$ 8,263</span> NT$ 8,130</span></div>
+<div class="flex justify-between"><span class="text-gray-500">飯店/人 (全季武寧路4晚)</span><span class="font-bold text-gray-900"><span class="line-through text-gray-400 mr-1">NT$ 4,594</span> NT$ 4,529</span></div>
+</div></div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<div class="bg-white rounded-xl p-4 md:p-5 shadow-sm border border-gray-100">
+<h2 class="text-base md:text-lg font-bold text-emerald-700 border-l-4 border-emerald-500 pl-2 mb-3">&#x1F3E8; 全季酒店</h2>
+<img src="images/hotel_room.jpg" class="w-full h-auto rounded-lg mb-3" loading="lazy" alt="酒店房間">
+<div class="space-y-2 text-[11px] md:text-xs text-gray-600">
+<div class="flex justify-between"><span>地址</span><span class="text-right text-gray-800">長壽路651號（13號線武寧路站步行5分）</span></div>
+<div class="flex justify-between"><span>房型</span><span class="text-right text-gray-800">雙床房×2 + 大床房×1</span></div>
+<div class="flex justify-between"><span>設施</span><span class="text-right text-gray-800">智能投屏、KINGKOIL床墊、乾濕分離衛浴</span></div>
+</div></div>
+
+<div class="bg-white rounded-xl p-4 md:p-5 shadow-sm border border-gray-100">
+<h2 class="text-base md:text-lg font-bold text-indigo-900 border-l-4 border-indigo-500 pl-2 mb-3">&#x1F4CA; 行程預算</h2>
+<img src="images/map_day1.png" class="w-full h-auto rounded-lg mb-3" loading="lazy" alt="行程地圖">
+<div class="text-xs md:text-sm text-gray-700">
+<div class="bg-blue-50 p-3 rounded-lg mb-3">
+<p class="font-bold text-blue-900 mb-2">每日行程亮點</p>
+<ul class="space-y-1 text-[11px]">
+<li>Day1：抵達上海・夜訪長壽路</li>
+<li>Day2：石庫門・豫園・南京路・外灘</li>
+<li>Day3：靜安寺・武康路・田子坊</li>
+<li>Day4：朱家角古鎮・上海博物館</li>
+<li>Day5：慢悠悠的告別日</li>
+</ul></div>
+<p class="text-right text-sm font-bold text-emerald-600">NT$ 19,375／人</p></div></div>
+</div>
+
+<div class="bg-white rounded-xl p-4 md:p-5 shadow-sm border border-gray-100">
+<h2 class="text-base md:text-lg font-bold text-red-600 border-l-4 border-red-500 pl-2 mb-4">&#x1F474; 行前準備</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="flex items-start gap-3"><div class="bg-red-50 text-red-500 p-2 rounded-lg text-xs md:text-sm font-bold mt-0.5 shadow-sm w-7 h-7 flex items-center justify-center">1</div>
+<div><h3 class="text-xs md:text-sm font-bold text-gray-800">交通以打車為主</h3><p class="text-[11px] md:text-xs text-gray-500 mt-1">上海地鐵站體龐大，全程使用「滴滴出行」最舒适。</p></div></div>
+<div class="flex items-start gap-3"><div class="bg-red-50 text-red-500 p-2 rounded-lg text-xs md:text-sm font-bold mt-0.5 shadow-sm w-7 h-7 flex items-center justify-center">2</div>
+<div><h3 class="text-xs md:text-sm font-bold text-gray-800">全數位化準備</h3><p class="text-[11px] md:text-xs text-gray-500 mt-1">台灣先下載「支付寶」與「微信」並綁定信用卡。</p></div></div>
+<div class="flex items-start gap-3"><div class="bg-red-50 text-red-500 p-2 rounded-lg text-xs md:text-sm font-bold mt-0.5 shadow-sm w-7 h-7 flex items-center justify-center">3</div>
+<div><h3 class="text-xs md:text-sm font-bold text-gray-800">11月天氣（10~18°C）</h3><p class="text-[11px] md:text-xs text-gray-500 mt-1">早晚溫差大，洋蔥式穿搭+帽子。</p></div></div>
+</div></div>
+</div>
+
+<div id="sheet2" class="hidden space-y-4 md:space-y-6">
+<div class="flex gap-2 md:gap-4 justify-start md:justify-center overflow-x-auto hide-scrollbar pb-2 md:pb-0 px-1">
+<button id="db1" onclick="switchDay(1)" class="flex-none bg-blue-600 text-white text-xs md:text-sm px-5 py-2.5 md:py-3 rounded-full font-bold shadow-sm transition-all">D1 (11/4)</button>
+<button id="db2" onclick="switchDay(2)" class="flex-none bg-white text-gray-600 text-xs md:text-sm px-5 py-2.5 md:py-3 rounded-full font-bold shadow-sm transition-all">D2 (11/5)</button>
+<button id="db3" onclick="switchDay(3)" class="flex-none bg-white text-gray-600 text-xs md:text-sm px-5 py-2.5 md:py-3 rounded-full font-bold shadow-sm transition-all">D3 (11/6)</button>
+<button id="db4" onclick="switchDay(4)" class="flex-none bg-white text-gray-600 text-xs md:text-sm px-5 py-2.5 md:py-3 rounded-full font-bold shadow-sm transition-all">D4 (11/7)</button>
+<button id="db5" onclick="switchDay(5)" class="flex-none bg-white text-gray-600 text-xs md:text-sm px-5 py-2.5 md:py-3 rounded-full font-bold shadow-sm transition-all">D5 (11/8)</button>
+</div>
+<div id="map-container" class="w-full rounded-xl h-[280px] md:h-[420px] shadow-sm border border-gray-100 mb-2 md:mb-4"></div>
+<div id="dayContent" class="space-y-4 md:space-y-5"></div>
+</div>
+
+<div id="sheet3" class="hidden animate-fade">
+<div class="bg-gradient-to-br from-blue-800 to-indigo-900 text-white rounded-2xl p-6 md:p-8 shadow-lg">
+<p class="text-xs md:text-sm text-blue-200 font-medium">全家族 6 人預估總花費</p>
+<p class="text-3xl md:text-4xl font-black mt-2 tracking-tight">NT$ 116,250</p>
+<div class="w-full h-px bg-blue-700 my-5 md:my-6"></div>
+<div class="flex justify-between items-center">
+<div><p class="text-[10px] md:text-xs text-blue-200">每人平均分攤</p><p class="text-lg md:text-xl font-bold">NT$ 19,375</p></div>
+<div class="bg-white/10 px-4 py-2 rounded-xl text-right"><p class="text-[9px] md:text-xs text-blue-200">當地預估花費</p><p class="text-sm md:text-base font-semibold">&#165; 1,493</p></div>
+</div></div>
+<div class="bg-white rounded-xl p-5 md:p-6 shadow-sm border border-gray-100 mt-6">
+<h2 class="text-sm md:text-base font-bold text-gray-800 border-l-4 border-blue-600 pl-3 mb-5">費用明細</h2>
+<div class="space-y-3 text-xs md:text-sm">
+<div class="flex justify-between py-3 border-b border-gray-100"><div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-blue-500"></span><span>春秋機票</span></div><span class="font-bold">NT$ 8,263</span></div>
+<div class="flex justify-between py-3 border-b border-gray-100"><div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-emerald-500"></span><span>全季酒店</span></div><span class="font-bold">NT$ 4,594</span></div>
+<div class="flex justify-between py-3 border-b border-gray-100"><div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-amber-500"></span><span>餐飲</span></div><span class="font-bold">NT$ 4,320</span></div>
+<div class="flex justify-between py-3 border-b border-gray-100"><div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-red-500"></span><span>交通</span></div><span class="font-bold">NT$ 1,091</span></div>
+<div class="flex justify-between py-3 border-b border-gray-100"><div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-purple-500"></span><span>門票</span></div><span class="font-bold">NT$ 1,305</span></div>
+<div class="flex justify-between pt-4 font-black text-blue-900 bg-blue-50/50 p-2 rounded"><span>預計總計</span><span>NT$ 19,099</span></div>
+</div></div>
+</div>
+
+<div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-2 md:py-3 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-40">
+<div class="max-w-5xl mx-auto px-2 md:px-4 flex justify-around md:justify-center md:gap-24 text-[10px] md:text-sm text-gray-500 font-medium">
+<div class="flex items-center gap-1 truncate">&#x1F4A1; 手機電腦均可查看</div>
+<button onclick="window.print()" class="flex items-center gap-1 truncate text-blue-600 hover:text-blue-800 font-semibold transition-colors">&#x1F4E5; 下載PDF</button>
+</div></div>
+
+<script>
+const DAYS = [
+{"id":1,"title":"第一天：晚班機啟程與安心入住","spots":[{"name":"搭乘春秋航空前往上海","img":"spring","desc":"18:15 高雄小港機場起飛，20:35 抵達上海浦東。春秋航空 9C8878，飛行時間約 2小時20分鐘。<br><br>建議提前在春秋航空 App 預訂「舒適座」（¥50-80），長輩膝蓋較不會頂到前座。每人含 20kg 托運行李額度（長輩伴手禮免煩惱），手提 1件 7kg。<br><br>建議提前在台灣下載「滴滴出行」App 並綁定信用卡，或預約攜程接機（約 ¥180-200/車）。“,"tip":"班機抵達時間較晚（晚間八點半），長輩盡量在機上小睡休息。出關後全程打車直達飯店門口。“,"sou":[],"snk":[]},{"name":"全季酒店(武寧路店) 託入住","img":"hotel_room","desc":"約 22:00 抵達飯店。全季酒店武寧路店位於普陀區長壽路651號，地鐵13號線武寧路站步行5分鐘。<br><br>本次預訂2間雙床房（智能投屏）供4位長輩入住、1間大床房供2位晚輩，均含豐盛自助早餐。<br><br>雙床房規格：22 平方米，2-6 樓層，2 張 1.2 米單人床（美國 KINGKOIL「雲夢」床墊），智能投屏電視，乾濕分離衛浴。“,"tip":"第一天以充足睡眠為最高原則。建議所有人 23:00 前就寢，養足精神。“,"sou":[],"snk":[]},{"name":"飯店周邊宵夜推薦","img":"xiaolongbao","desc":"長輩搭機勞累，建議由晚輩用「餓了麼」或「美團外賣」App 叫外賣送到飯店大廳。<br><br>推薦：吉祥餛飩（湯頭用老母雞熬製）、砂鍋粥專門店（潮汕風味）、陽春麵（上海本幫經典）、小楊生煎包（底部酥脆）。“,"tip":"切勿讓長輩吃太油膩或辛辣的食物，以免腸胃不適。建議搭配熱茶。“,"sou":[],"snk":[["機上預訂熱食","¥40","可於訂票時加購，推薦雞肉飯或牛肉麵"],["浦東機場便利商店","¥15-30","飯糰、飲料、餅乾"]]}],"lunch":"午餐：吉祥餛飩或砂鍋粥","dinner":"晚餐：小楊生煎包或地方小館","pie":{"total":320,"labels":["餐飲","交通","門票"],"colors":["#f59e0b","#ef4444","#8b5cf6"],"values":[250,40,30]}},
+{"id":2,"title":"第二天：石庫門到十里洋場","spots":[{"name":"新天地（石庫門建築群）","img":"xintiandi","desc":"11:00-12:30。石庫門是上海特有的弄堂建築，將老上海磚木結構與西洋元素融合。<br><br>走在青石板路上，兩旁是精緻的 coffee shop 與設計小店，長輩會喜歡這「老上海的味道」。“,"tip":"石庫門建築較舊，長輩走路請小心地磚不平處。建議拍攝建築細節與光影特寫。“,"sou":[["石庫門紀念徽章","¥30-50","建築模型或明信片"]],"snk":[]},{"name":"豫園・明代古典園林","img":"yuyuan","desc":"13:00-14:30。建於明嘉靖年間（1559年），園中假山流水、九曲橋、亭台樓閣錯落有致。<br><br>秋季銀杏葉轉黃，與古典建築相映成趣。長輩最愛的古色古香景點。“,"tip":"豫園客流量大，長輩請緊跟家人。園內有許多涼亭可歇腳。“,"sou":[],"snk":[["南翔饅頭店小籠包","NT$200-300","皮薄湯多、蟹粉灌湯包"],["路邊生煎包","NT$50-80","底部金黃酥脆，咬下會噴汁"]]}],"lunch":"午餐：南翔饅頭店","dinner":"晚餐：上海老飯店","pie":{"total":550,"labels":["餐飲","交通","門票"],"colors":["#f59e0b","#ef4444","#8b5cf6"],"values":[400,50,100]}},
+{"id":3,"title":"第三天：梧桐樹下的法式浪漫","spots":[{"name":"靜安寺・千年古剎","img":"jingan","desc":"09:30-10:30。始建於三國東吳（247年），是上海最古老的佛寺。<br><br>寺內「平安鐘」為上海三大鐘之一，金黃色琉璃瓦覆頂，在現代高樓群中格外莊嚴寧靜。“,"tip":"靜安寺香火旺盛，長輩可在佛殿前合十祈福。寺內有休息區可歇脚。“,"sou":[["靜安寺平安符","¥20-50","佛前請購"]],"snk":[]},{"name":"武康路・法租界最美街道","img":"wukang_rd","desc":"11:30-12:30。武康路全長約1公里，兩旁的法國梧桐樹在十月染上金黃色。<br><br>路上保存了許多老洋房——武康大樓（外觀像一艘大船）、羅密歐陽台。“,"tip":"武康路適合慢慢散步，長輩走累了隨時找 coffee shop 歇脚。“,"sou":[["武康路明信片","¥15-30","老上海風情"]],"snk":[]},{"name":"田子坊・弄堂裡的文創迷宮","img":"tianzifang","desc":"14:00-16:00。田子坊原是普通居民區，後來進駐了許多藝術家工作室和獨立小店。<br><br>巷弄狭窄蜿蜒，兩旁掛滿了藝術品、手工藝品與各國小旗，充滿生活氣息。“,"tip":"田子坊人潮擁擠，長輩請牽手同行。建議上午十點前或下午四點後避開人潮。“,"sou":[["田子坊手作","¥50-200","藝術家工作室"]],"snk":[["老上海豆腐花","NT$50-100","鹹甜皆有"],["姜粉米線","NT$80-120","清爽開胃"]]}],"lunch":"午餐：田子坊弄堂小吃","dinner":"晚餐：長壽路商圈小館","pie":{"total":380,"labels":["餐飲","交通","門票"],"colors":["#f59e0b","#ef4444","#8b5cf6"],"values":[250,40,90]}},
+{"id":4,"title":"第四天：水鄉古鎮朱家角","spots":[{"name":"朱家角古鎮・上海最美水鄉","img":"zhujiajiao","desc":"09:00-12:00。朱家角始建於宋朝，擁有36座古橋、9條臨水老街。<br><br>最有名的是「放生橋」——一座五孔馬陽橋橫跨漕港河。秋季微風吹過河面，楊柳輕搖。<br><br>長輩坐在河邊長廊喝茶、看船來船往，會是最愜意的時光。“,"tip":"朱家角古鎮石板路較滑，長輩請穿防滑鞋。建议上午十點前抵達避開人潮。“,"sou":[["放生橋紀念幣","¥20-50","古鎮明信片"]],"snk":[["扎肉","NT$50-80","粽葉包裹五花肉卤製"],["糖藕","NT$30-50","糯米塞入蓮藕，桂花糖水"]]}],"lunch":"午餐：朱家角古鎮小吃","dinner":"晚餐：人民廣場本幫菜","pie":{"total":420,"labels":["餐飲","交通","門票"],"colors":["#f59e0b","#ef4444","#8b5cf6"],"values":[300,60,60]}},
+{"id":5,"title":"第五天：慢悠悠的告別日","spots":[{"name":"酒店早餐與最後散步","img":"braised_pork","desc":"08:00-10:00。酒店早餐後，長壽路最後散步。<br><br>長壽路周邊有商場與超市，適合最後採買：上海糕點、雪花膏、梨膏糖。“,"tip":"最後一天不必匆忙，慢慢享用早餐，整理行李。“,"sou":[["上海糕點禮盒","NT$200-300","雲片糕、杏仁糕"]],"snk":[["長壽路鍋貼","NT$50-80","外皮酥脆"]]}],"lunch":"午餐：長壽路輕食","dinner":"晚餐：機場或飯店附近","pie":{"total":250,"labels":["餐飲","交通","門票"],"colors":["#f59e0b","#ef4444","#8b5cf6"],"values":[180,40,30]}}
+];
+
+function initMap() {
+  if(!mapInstance){
+    mapInstance=L.map('map-container').setView([31.2415,121.4245],12);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{attribution:'&copy; OSM'}).addTo(mapInstance);
+    markerLayer=L.layerGroup().addTo(mapInstance);polylineLayer=L.layerGroup().addTo(mapInstance);
+  }
+}
+
+function switchSheet(s){
+  for(let i=1;i<=3;i++){document.getElementById('sheet'+i).classList.add('hidden');document.getElementById('tab'+i).classList.remove('active-tab');}
+  document.getElementById('sheet'+s).classList.remove('hidden');document.getElementById('tab'+s).classList.add('active-tab');
+  if(s===2){initMap();setTimeout(()=>{mapInstance.invalidateSize();if(!document.getElementById('db1').classList.contains('bg-blue-800'))switchDay(1)},100);}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleAccordion(id){
+  const c=document.getElementById('ac-'+id);const i=document.getElementById('ai-'+id);
+  if(c.classList.contains('open')){c.classList.remove('open');i.style.transform='rotate(0deg)'}
+  else{c.classList.add('open');i.style.transform='rotate(180deg)';}
+}
+
+function imgTag(key){
+  if(!key)return '<div class="w-full h-36 md:h-48 rounded-lg bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center text-gray-400 text-xs"><span>&#x1F5BC;&#xFE0F; 暫無圖片</span></div>';
+  return '<img src="images/'+key+'.jpg" class="w-full h-auto rounded-lg mb-3" loading="lazy" alt="spot photo">';
+}
+
+function switchDay(d){
+  for(let i=1;i<=5;i++){const b=document.getElementById('db'+i);
+    if(i===d)b.className='flex-none bg-blue-800 text-white text-xs md:text-sm px-5 py-2.5 md:py-3 rounded-full font-bold shadow-md transition-all';
+    else b.className='flex-none bg-white text-gray-600 text-xs md:text-sm px-5 py-2.5 md:py-3 rounded-full font-semibold border border-gray-200 transition-all hover:bg-gray-50';}
+  const data=DAYS[d-1];
+  if(mapInstance&&markerLayer&&polylineLayer&&data.routeCoords){
+    markerLayer.clearLayers();polylineLayer.clearLayers();
+    const pts=[];data.routeCoords.forEach((p,i)=>{pts.push(p.p);
+      let c='marker-label';if(p.t==='hotel')c+=' hotel-label';if(p.t==='airport')c+=' airport-label';
+      L.marker(p.p,{icon:L.divIcon({className:'w-3.5 h-3.5 rounded-full border-[3px] border-white bg-blue-600 shadow-md',iconSize:[16,16],iconAnchor:[8,8]})})
+      .addTo(markerLayer).bindTooltip((i+1)+'. '+p.n,{permanent:true,direction:'top',className:c,offset:[0,-6]});});
+    L.polyline(pts,{color:'#3b82f6',weight:3,dashArray:'6,8',opacity:.8}).addTo(polylineLayer);
+    if(pts.length>0)mapInstance.fitBounds(pts,{padding:[40,40],maxZoom:13});
+  }
+  let h='<div class="bg-white rounded-xl p-4 md:p-5 shadow-sm border border-gray-100"><h2 class="text-sm md:text-base font-black text-blue-900 flex items-center gap-2"><span class="bg-blue-100 text-blue-800 text-[11px] md:text-xs px-2 py-0.5 rounded">Day '+d+'</span>'+data.title+'</h2></div>';
+  h+='<div class="space-y-3 md:space-y-4 mt-4 md:mt-5">';
+  data.spots.forEach((s,i)=>{
+    const uid=d+'_'+i;
+    h+='<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">'+
+    '<button onclick="toggleAccordion('+"'"+uid+"'"+')" class="w-full px-4 md:px-5 py-3 md:py-4 flex justify-between items-center bg-gray-50/70 hover:bg-gray-100 text-left transition-colors">'+
+    '<span class="text-xs md:text-sm font-bold text-gray-800 flex items-center gap-2"><span class="w-2 h-2 bg-blue-600 rounded-full"></span>'+s.name+'</span>'+
+    '<svg id="ai-'+uid+'" class="w-4 h-4 md:w-5 md:h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg></button>'+
+    '<div id="ac-'+uid+'" class="accordion-content"><div class="p-4 md:p-5 border-t border-gray-50 space-y-3">'+
+    imgTag(s.img)+
+    '<p class="text-xs md:text-sm text-gray-600 leading-relaxed">'+s.desc+'</p>'+
+    '<div class="bg-amber-50/60 p-3 rounded-lg border border-amber-100/50 text-[11px] md:text-xs text-amber-800"><strong>&#x1F474; 長輩提醒：</strong>'+s.tip+'</div>';
+    if(s.sou&&s.sou.length>0){
+      h+='<div class="bg-pink-50/60 p-3 rounded-lg border border-pink-100/50"><p class="text-[11px] md:text-xs font-bold text-pink-700 mb-2">&#x1F381; 伴手禮推薦</p>';
+      s.sou.forEach(function(r){h+='<div class="flex justify-between text-[11px] md:text-xs text-gray-700 py-1 border-b border-pink-100/30 last:border-0"><span>'+r[0]+'<br><span class="text-gray-400">'+r[1]+'</span></span><span class="font-bold text-pink-600 whitespace-nowrap">'+r[2]+'</span></div>';});
+      h+='</div>';}
+    if(s.snk&&s.snk.length>0){
+      h+='<div class="bg-green-50/60 p-3 rounded-lg border border-green-100/50"><p class="text-[11px] md:text-xs font-bold text-green-700 mb-2">&#x1F372; 小吃美食推薦</p>';
+      s.snk.forEach(function(r){h+='<div class="flex justify-between items-start text-[11px] md:text-xs text-gray-700 py-1.5 border-b border-green-100/30 last:border-0"><div><span class="font-medium">'+r[0]+'</span><br><span class="text-gray-400">'+r[2]+'</span></div><span class="font-bold text-green-600 whitespace-nowrap">'+r[1]+'</span></div>';});
+      h+='</div>';}
+    h+='</div></div></div>';
+  });
+  h+='</div>';
+  h+='<div class="bg-white rounded-xl p-4 md:p-5 shadow-sm border border-gray-100 space-y-3 mt-4 md:mt-5"><h3 class="text-xs md:text-sm font-bold text-gray-400">&#x1F37D;&#xFE0F; 當日正餐安排</h3><div class="space-y-3 text-xs md:text-sm"><div class="p-3 md:p-4 bg-gray-50 rounded-xl"><span class="font-bold text-blue-900 block mb-1.5">&#x1F31E; 午餐</span><span class="text-gray-700 block">'+data.lunch+'</span></div><div class="p-3 md:p-4 bg-gray-50 rounded-xl"><span class="font-bold text-blue-900 block mb-1.5">&#x1F319; 晚餐</span><span class="text-gray-700 block">'+data.dinner+'</span></div></div></div>';
+  document.getElementById('dayContent').innerHTML=h;
+  window.scrollTo({top:document.getElementById('map-container').offsetTop-80,behavior:'smooth'});
+}
+
+function switchSheet(s){
+  for(let i=1;i<=3;i++){document.getElementById('sheet'+i).classList.add('hidden');document.getElementById('tab'+i).classList.remove('active-tab');}
+  document.getElementById('sheet'+s).classList.remove('hidden');document.getElementById('tab'+s).classList.add('active-tab');
+  if(s===2&&mapInstance)mapInstance.invalidateSize();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+window.addEventListener('resize',()=>{if(mapInstance&&!document.getElementById('sheet2').classList.contains('hidden'))mapInstance.invalidateSize()});
+</script>
+</body>
+</html>
